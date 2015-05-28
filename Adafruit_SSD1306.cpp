@@ -18,7 +18,7 @@ All text above, and the splash screen below must be included in any redistributi
 
 #include <avr/pgmspace.h>
 #ifndef __SAM3X8E__
- #include <util/delay.h>
+// #include <util/delay.h>
 #endif
 #include <stdlib.h>
 
@@ -166,18 +166,18 @@ void Adafruit_SSD1306::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
   if (sid != -1){
     pinMode(dc, OUTPUT);
     pinMode(cs, OUTPUT);
-    csport      = portOutputRegister(digitalPinToPort(cs));
-    cspinmask   = digitalPinToBitMask(cs);
-    dcport      = portOutputRegister(digitalPinToPort(dc));
-    dcpinmask   = digitalPinToBitMask(dc);
+//    csport      = portOutputRegister(digitalPinToPort(cs));
+//    cspinmask   = digitalPinToBitMask(cs);
+//    dcport      = portOutputRegister(digitalPinToPort(dc));
+//    dcpinmask   = digitalPinToBitMask(dc);
     if (!hwSPI){
       // set pins for software-SPI
       pinMode(sid, OUTPUT);
       pinMode(sclk, OUTPUT);
-      clkport     = portOutputRegister(digitalPinToPort(sclk));
-      clkpinmask  = digitalPinToBitMask(sclk);
-      mosiport    = portOutputRegister(digitalPinToPort(sid));
-      mosipinmask = digitalPinToBitMask(sid);
+      //clkport     = portOutputRegister(digitalPinToPort(sclk));
+      //clkpinmask  = digitalPinToBitMask(sclk);
+      //mosiport    = portOutputRegister(digitalPinToPort(sid));
+      //mosipinmask = digitalPinToBitMask(sid);
       }
     if (hwSPI){
       SPI.begin ();
@@ -338,15 +338,15 @@ void Adafruit_SSD1306::ssd1306_command(uint8_t c) {
   if (sid != -1)
   {
     // SPI
-    //digitalWrite(cs, HIGH);
-    *csport |= cspinmask;
-    //digitalWrite(dc, LOW);
-    *dcport &= ~dcpinmask;
-    //digitalWrite(cs, LOW);
-    *csport &= ~cspinmask;
+    digitalWrite(cs, HIGH);
+    //*csport |= cspinmask;
+    digitalWrite(dc, LOW);
+    //*dcport &= ~dcpinmask;
+    digitalWrite(cs, LOW);
+    //*csport &= ~cspinmask;
     fastSPIwrite(c);
-    //digitalWrite(cs, HIGH);
-    *csport |= cspinmask;
+    digitalWrite(cs, HIGH);
+    //*csport |= cspinmask;
   }
   else
   {
@@ -452,15 +452,15 @@ void Adafruit_SSD1306::ssd1306_data(uint8_t c) {
   if (sid != -1)
   {
     // SPI
-    //digitalWrite(cs, HIGH);
-    *csport |= cspinmask;
-    //digitalWrite(dc, HIGH);
-    *dcport |= dcpinmask;
-    //digitalWrite(cs, LOW);
-    *csport &= ~cspinmask;
+    digitalWrite(cs, HIGH);
+    //*csport |= cspinmask;
+    digitalWrite(dc, HIGH);
+    //*dcport |= dcpinmask;
+    digitalWrite(cs, LOW);
+    //*csport &= ~cspinmask;
     fastSPIwrite(c);
-    //digitalWrite(cs, HIGH);
-    *csport |= cspinmask;
+    digitalWrite(cs, HIGH);
+    //*csport |= cspinmask;
   }
   else
   {
@@ -493,22 +493,28 @@ void Adafruit_SSD1306::display(void) {
   if (sid != -1)
   {
     // SPI
-    *csport |= cspinmask;
-    *dcport |= dcpinmask;
-    *csport &= ~cspinmask;
+
+
+    digitalWrite(cs, HIGH);
+    //*csport |= cspinmask;
+    digitalWrite(dc, HIGH);
+    //*dcport |= dcpinmask;
+    digitalWrite(cs, LOW);
+    //*csport &= ~cspinmask;
 
     for (uint16_t i=0; i<(SSD1306_LCDWIDTH*SSD1306_LCDHEIGHT/8); i++) {
       fastSPIwrite(buffer[i]);
       //ssd1306_data(buffer[i]);
     }
-    *csport |= cspinmask;
+    digitalWrite(cs, HIGH);
+    //*csport |= cspinmask;
   }
   else
   {
     // save I2C bitrate
 #ifndef __SAM3X8E__
-    uint8_t twbrbackup = TWBR;
-    TWBR = 12; // upgrade to 400KHz!
+    //    uint8_t twbrbackup = TWBR;
+    //TWBR = 12; // upgrade to 400KHz!
 #endif
 
     //Serial.println(TWBR, DEC);
@@ -527,7 +533,7 @@ void Adafruit_SSD1306::display(void) {
       Wire.endTransmission();
     }
 #ifndef __SAM3X8E__
-    TWBR = twbrbackup;
+    //    TWBR = twbrbackup;
 #endif
   }
 }

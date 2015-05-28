@@ -1,3 +1,10 @@
+This project is forked from https://github.com/adafruit/Adafruit_SSD1306,
+with some dirty modification for X86 arduion(Edison).
+
+So far, only the ssd1306_128x64_spi is verified.
+
+
+
 This is a library for our Monochrome OLEDs based on SSD1306 drivers
 
   Pick one up today in the adafruit shop!
